@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kalkulator Worth It (Value for Money)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --yellow: #ffd700;
+        --black: #000;
+        --white: #fff;
+        --muted: #a3a3a3;
+        --card: #0e0e0e;
+        --border: rgba(255, 255, 255, 0.08);
+        --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        --radius: 16px;
+        --t: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        --soft-red: #2a1012;
+        --soft-yellow: #1a1606;
+        --soft-green: #0e1a14;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--black);
+        color: var(--white);
+        line-height: 1.6;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+      }
+      a {
+        color: var(--yellow);
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 22px 16px 72px;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(8px);
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.9),
+          rgba(0, 0, 0, 0.55) 60%,
+          rgba(0, 0, 0, 0)
+        );
+        border-bottom: 1px solid var(--border);
+      }
+      .hero {
+        display: grid;
+        gap: 10px;
+        padding: 16px 16px;
+      }
+      @media (min-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr auto;
+          align-items: center;
+        }
+      }
+      h1.title {
+        font-family: Poppins, Inter, sans-serif;
+        font-weight: 800;
+        margin: 0;
+      }
+      h1.title span {
+        color: var(--yellow);
+      }
+      .subtitle {
+        color: #d1d5db;
+        font-size: 0.95rem;
+        margin: 4px 0 0;
+      }
+      .lang {
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        color: #fff;
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+      .badge {
+        justify-self: start;
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 215, 0, 0.08);
+        border: 1px solid rgba(255, 215, 0, 0.35);
+        transition: box-shadow var(--t);
+      }
+      .badge .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--yellow);
+        box-shadow: 0 0 14px 4px rgba(255, 215, 0, 0.7),
+          0 0 30px 8px rgba(255, 215, 0, 0.25);
+        animation: pulse 1.8s infinite;
+      }
+      .badge.glow {
+        box-shadow: 0 0 22px 4px rgba(255, 215, 0, 0.35);
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        60% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .cols-2 {
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 900px) {
+        .cols-2 {
+          grid-template-columns: 1.15fr 1fr;
+        }
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-family: Poppins, sans-serif;
+      }
+      .desc {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 2px 0 12px;
+      }
+      .fields {
+        display: grid;
+        gap: 12px;
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      label {
+        color: #d1d5db;
+      }
+      .control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        padding: 12px 14px;
+        border-radius: 12px;
+      }
+      .control:focus-within {
+        border-color: rgba(255, 215, 0, 0.5);
+      }
+      .control input {
+        flex: 1;
+        background: transparent;
+        border: 0;
+        outline: 0;
+        color: #fff;
+        font-size: 1rem;
+      }
+      .suffix {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .help {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        appearance: none;
+        border: 0;
+        outline: 0;
+        cursor: pointer;
+        background: var(--yellow);
+        color: #000;
+        font-weight: 800;
+        padding: 12px 16px;
+        border-radius: 12px;
+        transition: transform var(--t), filter var(--t);
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+      }
+      .ghost {
+        background: transparent;
+        color: var(--yellow);
+        border: 1px solid rgba(255, 215, 0, 0.5);
+      }
+      .small {
+        font-size: 0.9rem;
+        color: #d1d5db;
+      }
+
+      /* Progress/meta */
+      .progress {
+        height: 12px;
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
+        transition: width 450ms ease;
+      }
+      .meta {
+        display: grid;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: #d1d5db;
+      }
+      .meta-desc {
+        color: #a3a3a3;
+        font-size: 0.9rem;
+      }
+
+      /* KPI */
+      .kpis {
+        display: grid;
+        gap: 12px;
+      }
+      @media (min-width: 560px) {
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .kpi {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        transition: transform var(--t), border var(--t);
+      }
+      .kpi:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 215, 0, 0.35);
+      }
+      .kpi .label {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .kpi .value {
+        font-family: Poppins, sans-serif;
+        font-size: 1.15rem;
+      }
+      .kpi .hint {
+        color: #a3a3a3;
+        font-size: 0.9rem;
+      }
+
+      /* Verdict */
+      .motive {
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      .motive.low {
+        background: linear-gradient(180deg, var(--soft-red), #080808);
+        border-color: rgba(255, 107, 107, 0.25);
+      }
+      .motive.edge {
+        background: linear-gradient(180deg, var(--soft-yellow), #080808);
+        border-color: rgba(255, 229, 109, 0.25);
+      }
+      .motive.high {
+        background: linear-gradient(180deg, var(--soft-green), #080808);
+        border-color: rgba(71, 232, 129, 0.25);
+      }
+      .motive h4 {
+        margin: 0 0 6px;
+        font-family: Poppins, sans-serif;
+      }
+      .big-verdict {
+        margin-top: 10px;
+        text-align: center;
+        font-family: Poppins, sans-serif;
+        font-weight: 800;
+        font-size: clamp(1.4rem, 3.6vw, 2.3rem);
+        padding: 10px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+      }
+      .big-verdict.low {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.35);
+      }
+      .big-verdict.edge {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.35);
+      }
+      .big-verdict.high {
+        background: rgba(34, 197, 94, 0.1);
+        border-color: rgba(34, 197, 94, 0.35);
+      }
+
+      .hr {
+        height: 1px;
+        background: var(--border);
+        margin: 12px 0 16px;
+      }
+      .toast {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        background: #0f0f0f;
+        color: #fff;
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all var(--t);
+        box-shadow: var(--shadow);
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ====== CREDIT SECTION ====== */
+      .credit.card {
+        margin-top: 18px;
+      }
+      .credit .who {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .credit .name {
+        margin: 4px 0;
+        font-size: 1.15rem;
+        color: var(--yellow);
+        font-weight: 800;
+      }
+      .role {
+        color: #e5e7eb;
+        margin: 0;
+      }
+      .socials {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .socials a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        background: rgba(255, 215, 0, 0.1);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 8px;
+        transition: all var(--t);
+        text-decoration: none;
+        color: #fff;
+      }
+      .socials a:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+
+      /* avatar */
+      .avatar-lg {
+        width: 96px;
+        height: 96px;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 3px solid var(--yellow);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.18),
+          0 0 40px rgba(255, 215, 0, 0.08);
+        display: block;
+        margin: 0 auto 10px auto;
+      }
+      @media (min-width: 900px) {
+        .avatar-lg {
+          width: 104px;
+          height: 104px;
+        }
+      }
+
+      /* quote in the middle */
+      .blockquote {
+        font-style: italic;
+        color: #d1d5db;
+        margin: 12px 0;
+        margin-top: 4px;
+        padding-left: 12px;
+        border-left: 3px solid var(--yellow);
+        text-align: center;
+        border-left: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap hero">
+        <div>
+          <h1 class="title">
+            <span data-i="app">Kalkulator</span>:
+            <span data-i="title">Worth It (Value for Money)</span>
+          </h1>
+          <p class="subtitle" data-i="subtitle">
+            Apakah barang ini sepadan dengan uang yang sudah kamu keluarkan?
+            Hitung dari pemakaian & biaya, plus analisis harga pasaran.
+          </p>
+          <div class="badge" id="liveBadge" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="small" data-i="badge">Status</span>
+            <strong id="statusNow">—</strong>
+          </div>
+        </div>
+        <div>
+          <select id="lang" class="lang" aria-label="Language">
+            <option value="id" selected>Indonesia</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="grid cols-2">
+        <!-- INPUT -->
+        <section class="card" aria-labelledby="fTitle">
+          <h3 id="fTitle" data-i="formTitle">Data Barang</h3>
+          <p class="desc" data-i="formDesc">
+            Isi data realistis. Kalkulator menilai “worth it” (sepadan) dari
+            sisi pemakaian, dan memberi analisis perbandingan dengan harga
+            pasaran.
+          </p>
+
+          <div class="fields">
+            <div class="field">
+              <label for="buy" data-i="buy">Harga beli awal</label>
+              <div class="control">
+                <input
+                  id="buy"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  placeholder="contoh: 2.000.000"
+                />
+                <span class="suffix">Rp</span>
+              </div>
+              <div class="help" data-i="buyHelp">
+                Harga saat pertama membeli.
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="other" data-i="other">Biaya lain (opsional)</label>
+              <div class="control">
+                <input
+                  id="other"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  placeholder="contoh: 200.000"
+                />
+                <span class="suffix">Rp</span>
+              </div>
+              <div class="help" data-i="otherHelp">
+                Perawatan, upgrade, listrik, dsb.
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="months" data-i="monthsLbl">Lama pemakaian</label>
+              <div class="control">
+                <input
+                  id="months"
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="contoh: 36"
+                />
+                <span class="suffix" data-i="months">bulan</span>
+              </div>
+              <div class="help" data-i="monthsHelp">
+                Dari tanggal beli sampai hari ini (bulan).
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="usewk" data-i="useLbl">Frekuensi pemakaian</label>
+              <div class="control">
+                <input
+                  id="usewk"
+                  type="number"
+                  min="0"
+                  max="7"
+                  step="1"
+                  placeholder="contoh: 5"
+                />
+                <span class="suffix" data-i="perWeek">kali/minggu</span>
+              </div>
+              <div class="help" data-i="useHelp">
+                Berapa kali digunakan tiap minggu (0–7).
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="market" data-i="market">Harga pasaran saat ini</label>
+              <div class="control">
+                <input
+                  id="market"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  placeholder="contoh: 1.300.000"
+                />
+                <span class="suffix">Rp</span>
+              </div>
+              <div class="help" data-i="marketHelp">Cek marketplace/teman.</div>
+            </div>
+
+            <div class="field">
+              <label for="sell" data-i="sell">Harga jual kamu (opsional)</label>
+              <div class="control">
+                <input
+                  id="sell"
+                  type="number"
+                  min="0"
+                  step="1000"
+                  placeholder="contoh: 1.400.000"
+                />
+                <span class="suffix">Rp</span>
+              </div>
+              <div class="help" data-i="sellHelp">
+                Jika mau dijual sekarang/ini listing kamu.
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="copyBtn" class="btn" data-i="copy">
+                Salin Ringkasan
+              </button>
+              <button id="resetBtn" class="btn ghost" data-i="reset">
+                Reset
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- OUTPUT -->
+        <section class="card">
+          <h3 class="section-title" data-i="worthTitle">
+            Analisis Pemakaian (Worth It)
+          </h3>
+          <div
+            class="progress"
+            role="progressbar"
+            aria-label="Worth It Score"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div id="bar" class="bar"></div>
+          </div>
+
+          <div class="meta">
+            <div class="meta-row">
+              <span id="cpuText">/Pemakaian: Rp0</span>
+              <span id="cpuDesc" class="meta-desc"
+                >Biaya rata-rata tiap kali dipakai.</span
+              >
+            </div>
+            <div class="meta-row">
+              <span id="cpdText">/Hari: Rp0 | /Bulan: Rp0</span>
+              <span id="cpdDesc" class="meta-desc"
+                >Biaya memegang barang per hari/bulan (berdasarkan penurunan
+                nilai).
+              </span>
+            </div>
+            <div class="meta-row">
+              <span id="usesText">Total pemakaian: 0x</span>
+              <span id="usesDesc" class="meta-desc"
+                >Perkiraan total berapa kali barang dipakai sampai
+                sekarang.</span
+              >
+            </div>
+          </div>
+
+          <div class="kpis" style="margin-top: 10px">
+            <div class="kpi">
+              <span class="label" data-i="netCostLbl"
+                >Total biaya bersih hingga hari ini</span
+              >
+              <div id="netCost" class="value">Rp0</div>
+              <div id="netCostDesc" class="hint">
+                Harga beli + biaya lain − harga pasaran saat ini.
+              </div>
+            </div>
+            <div class="kpi">
+              <span class="label" data-i="verdictLbl">Kesimpulan</span>
+              <div id="verdict" class="value">—</div>
+              <div id="verdictDesc" class="hint">
+                Penilaian singkat apakah sepadan atau tidak.
+              </div>
+            </div>
+          </div>
+
+          <div class="motive edge" id="motive">
+            <h4 id="motiveTitle">Zona aman tipis</h4>
+            <p id="motiveText">
+              Isi data untuk melihat rekomendasi. Pakai angka realistis.
+            </p>
+            <div id="bigVerdict" class="big-verdict edge">—</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h3 class="section-title" data-i="marketTitle">
+            Analisis Pasar (Strategi Jual)
+          </h3>
+          <div class="kpis">
+            <div class="kpi">
+              <span class="label" data-i="deltaMarketLbl"
+                >Selisih harga jual vs pasaran</span
+              >
+              <div id="deltaMarket" class="value">Rp0</div>
+              <div id="deltaMarketDesc" class="hint">
+                Positif: di atas pasar (mungkin lambat laku). Negatif: di bawah
+                pasar (lebih cepat laku, tapi margin lebih kecil).
+              </div>
+            </div>
+            <div class="kpi">
+              <span class="label" data-i="depPctLbl">% penyusutan vs beli</span>
+              <div id="depPct" class="value">0%</div>
+              <div id="depPctDesc" class="hint">
+                Seberapa turun nilainya dibanding harga beli.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- CREDIT SECTION -->
+      <section class="card credit">
+        <div class="who">
+          <!-- Ganti 'avatar.jpg' dengan URL/berkas fotomu -->
+          <img
+            class="avatar-lg"
+            src="/img/profile.jpg"
+            alt="Foto Yusma Rahman"
+          />
+        </div>
+
+        <!-- Quote di tengah (auto bilingual) -->
+        <blockquote class="blockquote" id="quote" data-i="quote">
+          "Nilai sejati bukan pada harga yang dibayar, tapi pada manfaat yang
+          diperoleh."
+        </blockquote>
+
+        <div class="who">
+          <p
+            class="small"
+            style="margin: 6px 0; color: #fff; font-weight: 600"
+            data-i="createdBy"
+          >
+            Dibuat oleh
+          </p>
+          <p class="name">Yusma Rahman</p>
+          <p class="role">Web Developer</p>
+
+          <div class="socials">
+            <a
+              href="https://github.com/yusma1122"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <svg
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+              <span style="font-size: 0.9rem" data-i="github">GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/yusmarahman09/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <svg
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+              <span style="font-size: 0.9rem" data-i="linkedin">LinkedIn</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast">Ringkasan disalin</div>
+
+    <script>
+      /* ================= i18n ================= */
+      const STR = {
+        id: {
+          app: "Kalkulator",
+          title: "Worth It (Value for Money)",
+          subtitle:
+            "Apakah barang ini sepadan dengan uang yang sudah kamu keluarkan? Hitung dari pemakaian & biaya, plus analisis harga pasaran.",
+          badge: "Status",
+          formTitle: "Data Barang",
+          formDesc:
+            "Isi data realistis. Kalkulator menilai “worth it” (sepadan) dari sisi pemakaian, dan memberi analisis perbandingan dengan harga pasaran.",
+          buy: "Harga beli awal",
+          buyHelp: "Harga saat pertama membeli.",
+          other: "Biaya lain (opsional)",
+          otherHelp: "Perawatan, upgrade, listrik, dsb.",
+          monthsLbl: "Lama pemakaian",
+          months: "bulan",
+          monthsHelp: "Dari tanggal beli sampai hari ini (bulan).",
+          useLbl: "Frekuensi pemakaian",
+          perWeek: "kali/minggu",
+          useHelp: "Berapa kali digunakan tiap minggu (0–7).",
+          market: "Harga pasaran saat ini",
+          marketHelp: "Cek marketplace/teman.",
+          sell: "Harga jual kamu (opsional)",
+          sellHelp: "Jika mau dijual sekarang/ini listing kamu.",
+          copy: "Salin Ringkasan",
+          reset: "Reset",
+          worthTitle: "Analisis Pemakaian (Worth It)",
+          netCostLbl: "Total biaya bersih hingga hari ini",
+          verdictLbl: "Kesimpulan",
+          marketTitle: "Analisis Pasar (Strategi Jual)",
+          deltaMarketLbl: "Selisih harga jual vs pasaran",
+          depPctLbl: "% penyusutan vs beli",
+          /* credit */
+          quote:
+            '"Nilai sejati bukan pada harga yang dibayar, tapi pada manfaat yang diperoleh."',
+          createdBy: "Dibuat oleh",
+          github: "GitHub",
+          linkedin: "LinkedIn",
+        },
+        en: {
+          app: "Calculator",
+          title: "Worth It (Value for Money)",
+          subtitle:
+            "Is this item worth the money you’ve spent? Evaluate by usage & cost, plus market price analysis.",
+          badge: "Status",
+          formTitle: "Item Data",
+          formDesc:
+            "Use realistic numbers. We judge “worth it” from usage/cost and compare your price to the market.",
+          buy: "Original purchase price",
+          buyHelp: "Price when you first bought it.",
+          other: "Other costs (optional)",
+          otherHelp: "Maintenance, upgrades, electricity, etc.",
+          monthsLbl: "Usage length",
+          months: "months",
+          monthsHelp: "From purchase date to today (months).",
+          useLbl: "Usage frequency",
+          perWeek: "times/week",
+          useHelp: "How many times per week (0–7).",
+          market: "Current market price",
+          marketHelp: "Check marketplace/friends.",
+          sell: "Your selling price (optional)",
+          sellHelp: "If you plan to sell now/your listing.",
+          copy: "Copy Summary",
+          reset: "Reset",
+          worthTitle: "Usage Analysis (Worth It)",
+          netCostLbl: "Net cost to date",
+          verdictLbl: "Conclusion",
+          marketTitle: "Market Analysis (Selling Strategy)",
+          deltaMarketLbl: "Your price vs market",
+          depPctLbl: "% depreciation vs purchase",
+          /* credit */
+          quote:
+            '"True value isn’t in the price you pay, but in the use you gain."',
+          createdBy: "Created by",
+          github: "GitHub",
+          linkedin: "LinkedIn",
+        },
+      };
+
+      /* ================= Helpers ================= */
+      const $ = (id) => document.getElementById(id);
+      const cf0 = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0,
+      });
+      const nf = new Intl.NumberFormat("id-ID");
+      function clamp(n, a, b) {
+        return Math.min(Math.max(n, a), b);
+      }
+
+      /* ================= Elements ================= */
+      const els = {
+        buy: $("buy"),
+        other: $("other"),
+        months: $("months"),
+        usewk: $("usewk"),
+        market: $("market"),
+        sell: $("sell"),
+        bar: $("bar"),
+        cpuText: $("cpuText"),
+        cpuDesc: $("cpuDesc"),
+        cpdText: $("cpdText"),
+        cpdDesc: $("cpdDesc"),
+        usesText: $("usesText"),
+        usesDesc: $("usesDesc"),
+        netCost: $("netCost"),
+        netCostDesc: $("netCostDesc"),
+        verdict: $("verdict"),
+        verdictDesc: $("verdictDesc"),
+        motive: $("motive"),
+        motiveTitle: $("motiveTitle"),
+        motiveText: $("motiveText"),
+        bigVerdict: $("bigVerdict"),
+        deltaMarket: $("deltaMarket"),
+        deltaMarketDesc: $("deltaMarketDesc"),
+        depPct: $("depPct"),
+        depPctDesc: $("depPctDesc"),
+        statusNow: $("statusNow"),
+        liveBadge: document.getElementById("liveBadge"),
+        copyBtn: $("copyBtn"),
+        resetBtn: $("resetBtn"),
+        toast: $("toast"),
+        lang: $("lang"),
+      };
+
+      /* Defaults supaya langsung “hidup” */
+      els.buy.value = 2000000;
+      els.other.value = 200000;
+      els.months.value = 36;
+      els.usewk.value = 5;
+      els.market.value = 1300000;
+      els.sell.value = 1400000;
+
+      /* ================= Core calc ================= */
+      function calc() {
+        const isEN = $("lang").value === "en";
+        const T = (id, en) => (isEN ? en : id);
+
+        const buy = +els.buy.value || 0;
+        const other = +els.other.value || 0;
+        const months = clamp(+els.months.value || 0, 0, 600);
+        const usewk = clamp(+els.usewk.value || 0, 0, 7);
+        const market = +els.market.value || 0;
+        const sell = +els.sell.value || 0;
+
+        // usage estimates
+        const weeks = months * 4.345; // rata2 minggu per bulan
+        const totalUses = Math.round(usewk * weeks);
+        const daysSpan = months * 30;
+
+        // Net cost to date using current market price as "what you could recover"
+        const netCostToDate = Math.max(0, buy + other - market);
+
+        // Cost per use & per time
+        const cpu = totalUses > 0 ? Math.round(netCostToDate / totalUses) : 0;
+        const cpd = daysSpan > 0 ? Math.round(netCostToDate / daysSpan) : 0;
+        const cpm = months > 0 ? Math.round(netCostToDate / months) : 0;
+
+        // Worth-it heuristic thresholds (proportional to purchase price)
+        const lowTh = buy * 0.002; // 0.2% of purchase per use
+        const midTh = buy * 0.005; // 0.5% of purchase per use
+
+        let tier = "edge",
+          verdict = "",
+          verdictDesc = "",
+          status = "";
+        if (buy > 0 && months > 0) {
+          if (cpu <= lowTh && usewk >= 3) {
+            tier = "high";
+            verdict = T("WORTH IT", "WORTH IT");
+            verdictDesc = T(
+              "Biaya per pemakaian rendah dan dipakai sering. Uang yang kamu keluarkan sepadan.",
+              "Low cost per use and used frequently. Your spending is justified."
+            );
+            status = verdict;
+          } else if (cpu <= midTh && usewk >= 2) {
+            tier = "edge";
+            verdict = T("NETRAL", "NEUTRAL");
+            verdictDesc = T(
+              "Cukup sepadan, tapi masih bisa diefisienkan (entah dipakai lebih sering atau tekan biaya).",
+              "Somewhat worth it, but could be improved (use more often or reduce costs)."
+            );
+            status = verdict;
+          } else {
+            tier = "low";
+            verdict = T("TIDAK WORTH IT", "NOT WORTH IT");
+            verdictDesc = T(
+              "Biaya per pemakaian tinggi atau jarang dipakai. Pertimbangkan jual atau perbanyak pemakaian.",
+              "High cost per use or rarely used. Consider selling or increasing usage."
+            );
+            status = verdict;
+          }
+        } else {
+          verdict = "—";
+          verdictDesc = T(
+            "Isi data untuk melihat penilaian.",
+            "Fill the form to see the assessment."
+          );
+          status = "—";
+        }
+
+        // Market analysis
+        const deltaMarket = sell > 0 ? sell - market : 0;
+        const depPct =
+          buy > 0 && market > 0
+            ? Math.round(((buy - market) / buy) * 100)
+            : buy > 0
+            ? 100
+            : 0;
+
+        // ===== UI updates =====
+        $("cpuText").textContent =
+          (isEN ? "/Use: " : "/Pemakaian: ") + cf0.format(cpu);
+        $("cpuDesc").textContent = T(
+          "Biaya rata-rata tiap kali dipakai.",
+          "Average cost each time you use it."
+        );
+
+        $("cpdText").textContent =
+          (isEN ? "/Day: " : "/Hari: ") +
+          cf0.format(cpd) +
+          (isEN ? " | /Month: " : " | /Bulan: ") +
+          cf0.format(cpm);
+        $("cpdDesc").textContent = T(
+          "Biaya memegang barang per hari/bulan (berdasarkan penurunan nilai).",
+          "Holding cost per day/month (based on value drop)."
+        );
+
+        $("usesText").textContent =
+          T("Total pemakaian: ", "Total uses: ") +
+          nf.format(totalUses) +
+          T("x", "x");
+        $("usesDesc").textContent = T(
+          "Perkiraan total berapa kali barang dipakai sampai sekarang.",
+          "Estimated total number of uses so far."
+        );
+
+        $("netCost").textContent = cf0.format(netCostToDate);
+        $("netCostDesc").textContent = T(
+          "Harga beli + biaya lain − harga pasaran saat ini.",
+          "Purchase + other costs − current market price."
+        );
+
+        $("verdict").textContent = verdict;
+        $("verdictDesc").textContent = verdictDesc;
+
+        // Progress bar (map verdict to width)
+        const score = tier === "high" ? 85 : tier === "edge" ? 55 : 25;
+        $("bar").style.width = score + "%";
+
+        // Motive & big verdict
+        const motiveTitle =
+          tier === "high"
+            ? T("Sebadan—lanjutkan", "Worth it—keep it")
+            : tier === "edge"
+            ? T("Borderline—evaluasi", "Borderline—evaluate")
+            : T(
+                "Kurang sepadan—pertimbangkan opsi",
+                "Not worth it—consider options"
+              );
+
+        let motiveText = "";
+        if (tier === "high") {
+          motiveText = T(
+            "Pemakaianmu sudah intens dan biaya per pemakaian rendah—lanjutkan. Kalau ingin nilai maksimal, rawat baik dan jual saat pasarnya bagus.",
+            "You use it often with low cost per use—keep going. For max value, maintain well and sell when the market is good."
+          );
+        } else if (tier === "edge") {
+          motiveText = T(
+            "Hampir sepadan. Menaikkan frekuensi pemakaian atau menekan biaya bisa membuatnya lebih worth it.",
+            "Almost worth it. Increasing usage or cutting costs can push it into worth-it territory."
+          );
+        } else {
+          motiveText = T(
+            "Biaya per pemakaian tinggi. Jika jarang dipakai, pertimbangkan untuk dijual agar kerugian tidak bertambah.",
+            "High cost per use. If rarely used, consider selling to avoid further loss."
+          );
+        }
+
+        $("motive").classList.remove("low", "edge", "high");
+        $("motive").classList.add(tier);
+        $("motiveTitle").textContent = motiveTitle;
+        $("motiveText").textContent = motiveText;
+        $("bigVerdict").textContent = verdict;
+        $("bigVerdict").classList.remove("low", "edge", "high");
+        $("bigVerdict").classList.add(tier);
+
+        // Market KPIs
+        $("deltaMarket").textContent =
+          (deltaMarket >= 0 ? "+" : "") + cf0.format(deltaMarket);
+        $("deltaMarketDesc").textContent =
+          sell > 0
+            ? deltaMarket > 0
+              ? T(
+                  "Harga jualmu di atas pasar—mungkin lebih lambat laku.",
+                  "Your price is above market—may sell slower."
+                )
+              : deltaMarket < 0
+              ? T(
+                  "Harga jualmu di bawah pasar—lebih cepat laku, tapi margin lebih kecil.",
+                  "Your price is below market—faster to sell, but smaller margin."
+                )
+              : T(
+                  "Harga jualmu setara harga pasar—peluang laku stabil.",
+                  "Your price matches market—fair chance to sell."
+                )
+            : T(
+                "Isi harga jualmu untuk rekomendasi harga vs pasar.",
+                "Enter your selling price for pricing advice."
+              );
+
+        $("depPct").textContent = clamp(depPct, 0, 100) + "%";
+        $("depPctDesc").textContent = T(
+          "Perkiraan turunnya nilai dibanding harga beli.",
+          "Estimated value drop vs purchase price."
+        );
+
+        // Badge status
+        const prev = $("statusNow").dataset.prev || "";
+        if (prev !== verdict) {
+          document.getElementById("liveBadge").classList.add("glow");
+          setTimeout(
+            () => document.getElementById("liveBadge").classList.remove("glow"),
+            250
+          );
+          $("statusNow").dataset.prev = verdict;
+        }
+        $("statusNow").textContent = verdict || "—";
+
+        return {
+          buy,
+          other,
+          months,
+          usewk,
+          market,
+          sell,
+          totalUses,
+          daysSpan,
+          netCostToDate,
+          cpu,
+          cpd,
+          cpm,
+          verdict,
+          tier,
+          deltaMarket,
+          depPct,
+        };
+      }
+
+      /* ================= Summary & wiring ================= */
+      function summary(d) {
+        const isEN = $("lang").value === "en";
+        const L = (id, en) => (isEN ? en : id);
+        return [
+          L("— RINGKASAN WORTH IT —", "— WORTH IT SUMMARY —"),
+          L("Biaya bersih hingga hari ini: ", "Net cost to date: ") +
+            cf0.format(d.netCostToDate),
+          L("/Pemakaian: ", "/Use: ") + cf0.format(d.cpu),
+          (isEN ? "/Day: " : "/Hari: ") +
+            cf0.format(d.cpd) +
+            (isEN ? " | /Month: " : " | /Bulan: ") +
+            cf0.format(d.cpm),
+          L("Total pemakaian: ", "Total uses: ") + nf.format(d.totalUses) + "x",
+          L("Kesimpulan: ", "Conclusion: ") + d.verdict,
+          "",
+          L("— ANALISIS PASAR —", "— MARKET ANALYSIS —"),
+          L("Selisih harga jual vs pasar: ", "Your price vs market: ") +
+            ((d.deltaMarket >= 0 ? "+" : "") + cf0.format(d.deltaMarket)),
+          L("% penyusutan vs beli: ", "% depreciation vs purchase: ") +
+            d.depPct +
+            "%",
+        ].join("\n");
+      }
+
+      ["buy", "other", "months", "usewk", "market", "sell"].forEach((id) => {
+        $(id).addEventListener("input", calc);
+      });
+
+      $("copyBtn").addEventListener("click", async () => {
+        const d = calc();
+        try {
+          await navigator.clipboard.writeText(summary(d));
+          showToast(
+            $("lang").value === "en" ? "Summary copied" : "Ringkasan disalin"
+          );
+        } catch (e) {
+          showToast(
+            $("lang").value === "en" ? "Copy failed" : "Gagal menyalin"
+          );
+        }
+      });
+
+      $("resetBtn").addEventListener("click", () => {
+        ["buy", "other", "months", "usewk", "market", "sell"].forEach(
+          (k) => ($(k).value = "")
+        );
+        calc();
+      });
+
+      function showToast(msg) {
+        const t = $("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 1800);
+      }
+
+      /* ================= Language switch ================= */
+      function applyLang(lang) {
+        const dict = STR[lang];
+        document.querySelectorAll("[data-i]").forEach((el) => {
+          const key = el.getAttribute("data-i");
+          if (dict[key] !== undefined) el.textContent = dict[key];
+        });
+        document.documentElement.lang = lang === "en" ? "en" : "id";
+        calc();
+      }
+      $("lang").addEventListener("change", (e) => applyLang(e.target.value));
+
+      /* Init */
+      applyLang("id");
+      calc();
+    </script>
+  </body>
+</html>
